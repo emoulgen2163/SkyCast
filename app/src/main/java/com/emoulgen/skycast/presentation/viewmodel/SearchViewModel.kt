@@ -32,7 +32,7 @@ class SearchViewModel: ViewModel() {
                     val response = api.searchCities(name = _uiState.value.query)
                     _uiState.update {
                         it.copy(
-                            results = response.results
+                            results = response.results,
                         )
                     }
                 }
