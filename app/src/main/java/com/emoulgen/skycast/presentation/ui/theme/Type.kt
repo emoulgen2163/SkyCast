@@ -1,4 +1,4 @@
-package com.emoulgen.skycast.ui.theme
+package com.emoulgen.skycast.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
