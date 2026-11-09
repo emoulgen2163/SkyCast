@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Result(
+data class CityDto(
     @SerialName("admin1")
     val admin1: String? = null,
     @SerialName("country")

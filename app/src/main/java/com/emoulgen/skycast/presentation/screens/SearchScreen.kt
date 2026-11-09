@@ -31,15 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.emoulgen.skycast.data.remote.dto.Result
+import com.emoulgen.skycast.data.remote.dto.CityDto
 import com.emoulgen.skycast.presentation.viewmodel.SearchResult
 import com.emoulgen.skycast.presentation.viewmodel.SearchViewModel
 
@@ -170,7 +167,7 @@ fun CityContent(
                             .fillMaxWidth()
                             .padding(top = 18.dp)
                     ) {
-                        items(result.cities, key = { it.id!! }) { city ->
+                        items(result.cities, key = { it.id }) { city ->
 
                             Card(
                                 modifier = Modifier
@@ -186,16 +183,9 @@ fun CityContent(
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
 
-                                        Row(modifier = Modifier.fillMaxWidth()) {
-                                            Text("City name: ")
-
-                                            Spacer(Modifier.width(8.dp))
-
-                                            Text(
-                                                text = "${city.name}"
-                                            )
-
-                                        }
+                                        Text(
+                                            text = city.name
+                                        )
                                     }
                                 }
                             }
@@ -255,28 +245,28 @@ fun CityContentLoading() {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun CityContentSuccess() {
-    val cities = listOf(
-        Result(
-            id = 0,
-            name = "New York"
-        ),
-        Result(
-            id = 1,
-            name = "Los Angeles"
-        ),
-        Result(
-            id = 2,
-            name = "San Francisco"
-        ),
-    )
-    CityContent(
-        query = "",
-        onQueryText = {},
-        onSearch = {},
-        onBackClick = {},
-        result = SearchResult.Success(cities)
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun CityContentSuccess() {
+//    val cities = listOf(
+//        CityDto(
+//            id = 0,
+//            name = "New York"
+//        ),
+//        CityDto(
+//            id = 1,
+//            name = "Los Angeles"
+//        ),
+//        CityDto(
+//            id = 2,
+//            name = "San Francisco"
+//        ),
+//    )
+//    CityContent(
+//        query = "",
+//        onQueryText = {},
+//        onSearch = {},
+//        onBackClick = {},
+//        result = SearchResult.Success(cities)
+//    )
+//}

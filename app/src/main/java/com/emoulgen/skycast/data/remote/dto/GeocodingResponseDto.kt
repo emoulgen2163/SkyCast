@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Weather(
+data class GeocodingResponseDto(
     @SerialName("results")
-    val results: List<Result> = emptyList()
+    val results: List<CityDto> = emptyList()
 )

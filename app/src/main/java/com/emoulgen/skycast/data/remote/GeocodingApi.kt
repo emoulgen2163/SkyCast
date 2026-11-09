@@ -1,6 +1,6 @@
 package com.emoulgen.skycast.data.remote
 
-import com.emoulgen.skycast.data.remote.dto.Weather
+import com.emoulgen.skycast.data.remote.dto.GeocodingResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,5 +14,5 @@ interface GeocodingApi {
         count: Int = 10,
         @Query("language")
         language: String = "en"
-    ): Weather
+    ): GeocodingResponseDto
 }
