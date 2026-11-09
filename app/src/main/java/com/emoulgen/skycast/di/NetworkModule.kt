@@ -1,5 +1,6 @@
 package com.emoulgen.skycast.di
 
+import com.emoulgen.skycast.data.remote.ForecastApi
 import com.emoulgen.skycast.data.remote.GeocodingApi
 import com.emoulgen.skycast.utils.Constants.BASE_URL
 import dagger.Module
@@ -33,4 +34,11 @@ object NetworkModule {
     fun provideApi(retrofit: Retrofit): GeocodingApi {
         return retrofit.create(GeocodingApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideForecast(retrofit: Retrofit): ForecastApi {
+        return retrofit.create(ForecastApi::class.java)
+    }
+
 }
