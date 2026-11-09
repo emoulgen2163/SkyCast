@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.emoulgen.skycast.data.remote.dto.Result
@@ -44,7 +45,7 @@ import com.emoulgen.skycast.presentation.viewmodel.SearchViewModel
 
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel = viewModel(),
+    viewModel: SearchViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
 

@@ -1,24 +1,29 @@
 package com.emoulgen.skycast.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emoulgen.skycast.presentation.viewmodel.SearchResult.*
-import com.emoulgen.skycast.utils.Retrofit
+import com.emoulgen.skycast.domain.repository.CityRepository
+import com.emoulgen.skycast.presentation.viewmodel.SearchResult.Empty
+import com.emoulgen.skycast.presentation.viewmodel.SearchResult.Error
+import com.emoulgen.skycast.presentation.viewmodel.SearchResult.Loading
+import com.emoulgen.skycast.presentation.viewmodel.SearchResult.Success
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class SearchViewModel: ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(private val repository: CityRepository): ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchUiState())
 
     val uiState = _uiState.asStateFlow()
 
-    private val api = Retrofit.geocodingApi
+
 
     fun onQueryChange(text: String){
         _uiState.update {
@@ -43,9 +48,9 @@ class SearchViewModel: ViewModel() {
 
             try {
 
-                val response = api.searchCities(name = query)
+                val results = repository.searchCities(name = query)
 
-                if (response.results.isEmpty()) {
+                if (results.isEmpty()) {
                     _uiState.update {
                         it.copy(
                             results = Empty
@@ -54,7 +59,7 @@ class SearchViewModel: ViewModel() {
                 } else {
                     _uiState.update {
                         it.copy(
-                            results = Success(response.results)
+                            results = Success(results)
                         )
                     }
                 }
