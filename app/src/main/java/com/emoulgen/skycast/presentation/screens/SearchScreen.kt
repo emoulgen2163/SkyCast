@@ -148,7 +148,7 @@ fun CityContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        ErrorMessage("Something Went Wrong")
+                        ErrorMessage("Something Went Wrong: ${result.errorMessage}")
 
                         Button(
                             modifier = Modifier.padding(top = 10.dp),
