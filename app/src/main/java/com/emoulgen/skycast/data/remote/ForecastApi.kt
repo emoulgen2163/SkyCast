@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface ForecastApi {
 
     @GET("https://api.open-meteo.com/v1/forecast")
-    suspend fun getWeather(
+    suspend fun getForecast(
         @Query("latitude")
         latitude: Double,
         @Query("longitude")

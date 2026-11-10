@@ -1,5 +1,6 @@
 package com.emoulgen.skycast.presentation.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,15 +35,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.emoulgen.skycast.data.remote.dto.CityDto
+import com.emoulgen.skycast.domain.model.City
 import com.emoulgen.skycast.presentation.viewmodel.SearchResult
 import com.emoulgen.skycast.presentation.viewmodel.SearchViewModel
 
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
+    onCityClick: (City) -> Unit,
     onBackClick: () -> Unit
 ) {
 
@@ -53,7 +57,8 @@ fun SearchScreen(
         onQueryText = { viewModel.onQueryChange(it) },
         onSearch = { viewModel.onSearch() },
         result = uiState.results,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onCityClick = { onCityClick(it) }
     )
 
 }
@@ -65,6 +70,7 @@ fun CityContent(
     onQueryText: (String) -> Unit,
     onSearch: () -> Unit,
     onBackClick: () -> Unit,
+    onCityClick: (City) -> Unit,
     result: SearchResult,
 ) {
     @Composable
@@ -172,19 +178,24 @@ fun CityContent(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(8.dp),
+                                    .padding(8.dp)
+                                    .clickable(
+                                        onClick = { onCityClick(city) }
+                                    ),
                                 elevation = CardDefaults.cardElevation(8.dp)
                             ) {
                                 Box(
                                     modifier = Modifier.padding(16.dp)
                                 ) {
-                                    Column(
-                                        modifier = Modifier.padding(16.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
+                                    Column {
+                                        Text(city.name)
+
+                                        Spacer(Modifier.height(4.dp))
 
                                         Text(
-                                            text = city.name
+                                            text = city.country,
+                                            color = MaterialTheme.colorScheme.secondary,
+                                            fontSize = 10.sp
                                         )
                                     }
                                 }
@@ -205,7 +216,8 @@ fun CityContentPreviewIdle() {
         onQueryText = {},
         onSearch = {},
         onBackClick = {},
-        result = SearchResult.Idle
+        result = SearchResult.Idle,
+        onCityClick = { }
     )
 }
 
@@ -217,7 +229,8 @@ fun CityContentPreviewEmpty() {
         onQueryText = {},
         onSearch = {},
         onBackClick = {},
-        result = SearchResult.Empty
+        result = SearchResult.Empty,
+        onCityClick = { }
     )
 }
 
@@ -229,7 +242,8 @@ fun CityContentPreviewError() {
         onQueryText = {},
         onSearch = {},
         onBackClick = {},
-        result = SearchResult.Error("")
+        result = SearchResult.Error(""),
+        onCityClick = { }
     )
 }
 
@@ -241,32 +255,46 @@ fun CityContentLoading() {
         onQueryText = {},
         onSearch = {},
         onBackClick = {},
-        result = SearchResult.Loading
+        result = SearchResult.Loading,
+        onCityClick = { }
     )
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun CityContentSuccess() {
-//    val cities = listOf(
-//        CityDto(
-//            id = 0,
-//            name = "New York"
-//        ),
-//        CityDto(
-//            id = 1,
-//            name = "Los Angeles"
-//        ),
-//        CityDto(
-//            id = 2,
-//            name = "San Francisco"
-//        ),
-//    )
-//    CityContent(
-//        query = "",
-//        onQueryText = {},
-//        onSearch = {},
-//        onBackClick = {},
-//        result = SearchResult.Success(cities)
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun CityContentSuccess() {
+    val cities = listOf(
+        City(
+            id = 0,
+            name = "New York",
+            country = "US",
+            latitude = 0.0,
+            longitude = 0.0,
+            region = ""
+        ),
+        City(
+            id = 1,
+            name = "Los Angeles",
+            country = "US",
+            latitude = 0.0,
+            longitude = 0.0,
+            region = ""
+        ),
+        City(
+            id = 2,
+            name = "San Francisco",
+            country = "US",
+            latitude = 0.0,
+            longitude = 0.0,
+            region = ""
+        ),
+    )
+    CityContent(
+        query = "",
+        onQueryText = {},
+        onSearch = {},
+        onBackClick = {},
+        result = SearchResult.Success(cities),
+        onCityClick = {}
+    )
+}
