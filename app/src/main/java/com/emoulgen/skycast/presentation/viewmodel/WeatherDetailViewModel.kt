@@ -1,0 +1,49 @@
+package com.emoulgen.skycast.presentation.viewmodel
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.emoulgen.skycast.domain.repository.ForecastRepository
+import com.emoulgen.skycast.presentation.navigation.CityDetail
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
+import javax.inject.Inject
+
+@HiltViewModel
+class WeatherDetailViewModel @Inject constructor(savedStateHandle: SavedStateHandle, private val repository: ForecastRepository): ViewModel() {
+
+    private val route = savedStateHandle.toRoute<CityDetail>()
+
+    val cityName = route.name
+
+    private val _uiState = MutableStateFlow<WeatherUiState>(WeatherUiState.Loading)
+    val uiState = _uiState.asStateFlow()
+
+    init {
+        loadForecast()
+    }
+
+    fun loadForecast() {
+
+        viewModelScope.launch {
+
+            _uiState.value = WeatherUiState.Loading
+
+            try {
+                val response = repository.getForecast(route.latitude, route.longitude)
+                _uiState.value = WeatherUiState.Success(response)
+            } catch (e: IOException){
+                _uiState.value = WeatherUiState.Error("Check your internet connection")
+            } catch (e: HttpException){
+                _uiState.value = WeatherUiState.Error("Could not access to the server. Try again later")
+            } catch (e: Exception){
+                _uiState.value = WeatherUiState.Error("An error occurred: ${e.localizedMessage}")
+            }
+        }
+    }
+}
