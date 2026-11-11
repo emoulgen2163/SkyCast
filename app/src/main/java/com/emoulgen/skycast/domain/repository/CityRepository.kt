@@ -5,4 +5,8 @@ import com.emoulgen.skycast.domain.model.City
 interface CityRepository {
 
     suspend fun searchCities(name: String): List<City>
+
+    suspend fun saveLastOpened(city: City)
+
+    suspend fun getLastOpenedCity(): City?
 }

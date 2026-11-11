@@ -97,7 +97,7 @@ fun WeatherContent(
 
         is WeatherUiState.Loading -> {
             Box(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ){
                 CircularProgressIndicator()

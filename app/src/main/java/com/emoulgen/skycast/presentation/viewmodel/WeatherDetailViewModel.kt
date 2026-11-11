@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.emoulgen.skycast.domain.model.City
+import com.emoulgen.skycast.domain.repository.CityRepository
 import com.emoulgen.skycast.domain.repository.ForecastRepository
 import com.emoulgen.skycast.presentation.navigation.CityDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +17,11 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherDetailViewModel @Inject constructor(savedStateHandle: SavedStateHandle, private val repository: ForecastRepository): ViewModel() {
+class WeatherDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val repository: ForecastRepository,
+    private val cityRepository: CityRepository
+): ViewModel() {
 
     private val route = savedStateHandle.toRoute<CityDetail>()
 
@@ -26,6 +32,20 @@ class WeatherDetailViewModel @Inject constructor(savedStateHandle: SavedStateHan
 
     init {
         loadForecast()
+
+        viewModelScope.launch {
+
+            val city = City(
+                id = route.id,
+                name = route.name,
+                country = route.country,
+                latitude = route.latitude,
+                longitude = route.longitude,
+                region = route.region
+            )
+
+            cityRepository.saveLastOpened(city)
+        }
     }
 
     fun loadForecast() {
