@@ -6,7 +6,9 @@ import com.emoulgen.skycast.data.mapper.CityMapper.toCityEntity
 import com.emoulgen.skycast.data.remote.GeocodingApi
 import com.emoulgen.skycast.domain.model.City
 import com.emoulgen.skycast.domain.repository.CityRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CityRepositoryImpl @Inject constructor(private val api: GeocodingApi, private val dao: CityDao): CityRepository {
@@ -30,4 +32,22 @@ class CityRepositoryImpl @Inject constructor(private val api: GeocodingApi, priv
     }
 
     override suspend fun getLastOpenedCity(): City? = dao.getLastOpenedCity().first()?.toCity()
+
+    override suspend fun setFavorite(id: Int, isFavorite: Boolean) {
+        dao.setFavorite(isFavorite, id)
+    }
+
+    override fun isFavorite(id: Int): Flow<Boolean> = dao.getCity(id).map {
+        it?.isFavorite ?: false
+    }
+
+    override fun getFavorites(): Flow<List<City>> {
+        val favorites = dao.getFavorites()
+
+        return favorites.map { favorite ->
+            favorite.map {
+                it.toCity()
+            }
+        }
+    }
 }

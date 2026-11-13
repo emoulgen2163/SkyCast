@@ -30,6 +30,9 @@ class WeatherDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<WeatherUiState>(WeatherUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
+    private val _isFavorite = MutableStateFlow(false)
+    val isFavorite = _isFavorite.asStateFlow()
+
     init {
         loadForecast()
 
@@ -45,6 +48,10 @@ class WeatherDetailViewModel @Inject constructor(
             )
 
             cityRepository.saveLastOpened(city)
+
+            cityRepository.isFavorite(route.id).collect {
+                _isFavorite.value = it
+            }
         }
     }
 
@@ -68,6 +75,12 @@ class WeatherDetailViewModel @Inject constructor(
             } catch (e: Exception){
                 _uiState.value = WeatherUiState.Error("An error occurred: ${e.localizedMessage}")
             }
+        }
+    }
+
+    fun onToggleFavorite(){
+        viewModelScope.launch {
+            cityRepository.setFavorite(route.id, !_isFavorite.value)
         }
     }
 }

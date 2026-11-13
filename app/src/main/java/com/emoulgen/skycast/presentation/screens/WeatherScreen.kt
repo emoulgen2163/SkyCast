@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,6 +56,7 @@ fun WeatherScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -65,6 +69,18 @@ fun WeatherScreen(
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "Search"
+                        )
+                    }
+
+
+                    IconButton(
+                        onClick = { viewModel.onToggleFavorite() }
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Favorite",
+                            tint = if (isFavorite) Color(0xFFFFC107) else Color.Gray
                         )
                     }
                 }

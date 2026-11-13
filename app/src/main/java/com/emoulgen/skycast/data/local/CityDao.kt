@@ -19,4 +19,7 @@ interface CityDao {
 
     @Query("SELECT * FROM cities WHERE id = :id")
     fun getCity(id: Int): Flow<CityEntity?>
+
+    @Query("UPDATE cities SET isFavorite = :isFavorite WHERE id = :id")
+    suspend fun setFavorite(isFavorite: Boolean, id: Int)
 }

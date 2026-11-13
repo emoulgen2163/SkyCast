@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.emoulgen.skycast.data.remote.dto.CityDto
 import com.emoulgen.skycast.domain.model.City
 import com.emoulgen.skycast.presentation.viewmodel.SearchResult
 import com.emoulgen.skycast.presentation.viewmodel.SearchViewModel
@@ -51,11 +50,13 @@ fun SearchScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val favorites by viewModel.favorites.collectAsStateWithLifecycle()
 
     CityContent(
         query = uiState.query,
         onQueryText = { viewModel.onQueryChange(it) },
         onSearch = { viewModel.onSearch() },
+        favorites = favorites,
         result = uiState.results,
         onBackClick = onBackClick,
         onCityClick = { onCityClick(it) }
@@ -69,6 +70,7 @@ fun CityContent(
     query: String,
     onQueryText: (String) -> Unit,
     onSearch: () -> Unit,
+    favorites: List<City> = emptyList(),
     onBackClick: () -> Unit,
     onCityClick: (City) -> Unit,
     result: SearchResult,
@@ -134,6 +136,7 @@ fun CityContent(
             Spacer(Modifier.height(32.dp))
 
             when (result) {
+
                 is SearchResult.Loading -> {
                     Box(
                         contentAlignment = Alignment.Center
@@ -164,57 +167,99 @@ fun CityContent(
                 }
 
                 SearchResult.Idle -> {
-                    Text("Search for a City")
+                    if (favorites.isEmpty()) {
+                        Text("Search for a City")
+                    } else{
+                        CityList(onCityClick, favorites)
+                    }
                 }
 
                 is SearchResult.Success -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 18.dp)
-                    ) {
-                        items(result.cities, key = { it.id }) { city ->
-
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp)
-                                    .clickable(
-                                        onClick = { onCityClick(city) }
-                                    ),
-                                elevation = CardDefaults.cardElevation(8.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier.padding(16.dp)
-                                ) {
-                                    Column {
-                                        Text(city.name)
-
-                                        Spacer(Modifier.height(4.dp))
-
-                                        Text(
-                                            text = city.country,
-                                            color = MaterialTheme.colorScheme.secondary,
-                                            fontSize = 10.sp
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    CityList(onCityClick, result.cities)
                 }
             }
         }
     }
 }
 
+@Composable
+private fun CityList(
+    onCityClick: (City) -> Unit,
+    cities: List<City>
+) {
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 18.dp)
+    ) {
+        items(cities, key = { it.id }) { city ->
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .clickable(
+                        onClick = { onCityClick(city) }
+                    ),
+                elevation = CardDefaults.cardElevation(8.dp)
+            ) {
+                Box(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Column {
+                        Text(city.name)
+
+                        Spacer(Modifier.height(4.dp))
+
+                        Text(
+                            text = city.country,
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontSize = 10.sp
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CityContentPreviewIdle() {
+    val cities = listOf(
+        City(
+            id = 0,
+            name = "London",
+            country = "UK",
+            latitude = 0.0,
+            longitude = 0.0,
+            region = ""
+        ),
+        City(
+            id = 1,
+            name = "Paris",
+            country = "France",
+            latitude = 0.0,
+            longitude = 0.0,
+            region = ""
+        ),
+        City(
+            id = 2,
+            name = "Rome",
+            country = "Italy",
+            latitude = 0.0,
+            longitude = 0.0,
+            region = ""
+        ),
+    )
+
     CityContent(
         query = "",
         onQueryText = {},
         onSearch = {},
+        favorites = cities,
         onBackClick = {},
         result = SearchResult.Idle,
         onCityClick = { }

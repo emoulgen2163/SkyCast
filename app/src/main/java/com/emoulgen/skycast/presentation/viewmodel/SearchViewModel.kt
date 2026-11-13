@@ -2,6 +2,7 @@ package com.emoulgen.skycast.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.emoulgen.skycast.domain.model.City
 import com.emoulgen.skycast.domain.repository.CityRepository
 import com.emoulgen.skycast.presentation.viewmodel.SearchResult.Empty
 import com.emoulgen.skycast.presentation.viewmodel.SearchResult.Error
@@ -23,7 +24,17 @@ class SearchViewModel @Inject constructor(private val repository: CityRepository
 
     val uiState = _uiState.asStateFlow()
 
+    private val _favorites = MutableStateFlow<List<City>>(emptyList())
+    val favorites = _favorites.asStateFlow()
 
+
+    init {
+        viewModelScope.launch {
+            repository.getFavorites().collect {
+                _favorites.value = it
+            }
+        }
+    }
 
     fun onQueryChange(text: String){
         _uiState.update {
