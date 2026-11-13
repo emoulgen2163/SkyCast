@@ -5,5 +5,6 @@ import com.emoulgen.skycast.domain.model.Forecast
 
 interface ForecastRepository {
 
-    suspend fun getForecast(latitude: Double, longitude: Double): Forecast
+    suspend fun getForecast(cityId: Int, latitude: Double, longitude: Double): Forecast
+
 }

@@ -43,6 +43,7 @@ import com.emoulgen.skycast.presentation.viewmodel.WeatherDetailViewModel
 import com.emoulgen.skycast.presentation.viewmodel.WeatherUiState
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -126,7 +127,6 @@ fun WeatherContent(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp)
                     .padding(8.dp),
                 elevation = CardDefaults.cardElevation(8.dp)
             ) {
@@ -186,6 +186,18 @@ fun WeatherContent(
                                 }
                             }
                         }
+
+                        if (uiState.forecast.isFromCache) {
+                            Spacer(Modifier.height(32.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                val time = uiState.forecast.updatedAt.format(DateTimeFormatter.ofPattern("HH:mm"))
+                                Text("Last updated: $time" )
+                            }
+                        }
                     }
                 }
             }
@@ -213,14 +225,16 @@ fun WeatherContentScreenPreview() {
                 condition = WeatherCondition.Clear
             )
         },
-        daily = List(7){ i ->
+        daily = List(7) { i ->
             DailyForecast(
                 minTemperature = 8.0 + i,
                 maxTemperature = 12.0 + i,
                 time = LocalDate.of(2026, 11, 11 + i),
                 condition = WeatherCondition.Cloudy
             )
-        }
+        },
+        updatedAt = LocalDateTime.now(),
+        isFromCache = true
     )
     WeatherContent(
         cityName = "New York",

@@ -55,7 +55,11 @@ class WeatherDetailViewModel @Inject constructor(
             _uiState.value = WeatherUiState.Loading
 
             try {
-                val response = repository.getForecast(route.latitude, route.longitude)
+                val response = repository.getForecast(
+                    latitude = route.latitude,
+                    longitude = route.longitude,
+                    cityId = route.id
+                )
                 _uiState.value = WeatherUiState.Success(response)
             } catch (e: IOException){
                 _uiState.value = WeatherUiState.Error("Check your internet connection")

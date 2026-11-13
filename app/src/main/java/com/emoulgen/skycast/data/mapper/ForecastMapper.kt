@@ -64,12 +64,14 @@ object ForecastMapper {
         )
     }
     
-    fun ForecastResponseDto.toForecast(): Forecast{
+    fun ForecastResponseDto.toForecast(updatedAt: LocalDateTime, isFromCache: Boolean): Forecast{
 
         return Forecast(
             current = current?.toCurrentWeather() ?: error("no current information"),
             hourly = hourly?.toHourlyForecasts() ?: emptyList(),
-            daily = daily?.toDailyForecasts() ?: emptyList()
+            daily = daily?.toDailyForecasts() ?: emptyList(),
+            updatedAt = updatedAt,
+            isFromCache = isFromCache
         )
     }
 }
