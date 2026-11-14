@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
@@ -31,22 +33,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.emoulgen.skycast.R
 import com.emoulgen.skycast.domain.model.City
 import com.emoulgen.skycast.domain.model.CurrentWeather
 import com.emoulgen.skycast.domain.model.DailyForecast
 import com.emoulgen.skycast.domain.model.Forecast
 import com.emoulgen.skycast.domain.model.HourlyForecast
 import com.emoulgen.skycast.domain.model.WeatherCondition
+import com.emoulgen.skycast.presentation.ui.iconRes
+import com.emoulgen.skycast.presentation.ui.label
 import com.emoulgen.skycast.presentation.viewmodel.WeatherDetailViewModel
 import com.emoulgen.skycast.presentation.viewmodel.WeatherUiState
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +70,7 @@ fun WeatherScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("SkyCast") },
+                title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     IconButton(
                         onClick = onSearchClick
@@ -81,6 +90,15 @@ fun WeatherScreen(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Favorite",
                             tint = if (isFavorite) Color(0xFFFFC107) else Color.Gray
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh"
                         )
                     }
                 }
@@ -159,7 +177,13 @@ fun WeatherContent(
                             fontSize = 32.sp
                         )
 
-                        Text("${uiState.forecast.current.condition}")
+                        Icon(
+                            modifier = Modifier.size(64.dp),
+                            painter = painterResource(uiState.forecast.current.condition.iconRes()),
+                            contentDescription = uiState.forecast.current.condition.label()
+                        )
+
+                        Text(uiState.forecast.current.condition.label())
 
                         Text("${uiState.forecast.current.temperature}ºC")
 
@@ -176,7 +200,10 @@ fun WeatherContent(
                                     verticalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Text("${it.time.hour}.00 ")
-                                    Text("${it.condition}")
+                                    Icon(
+                                        painter = painterResource(uiState.forecast.current.condition.iconRes()),
+                                        contentDescription = uiState.forecast.current.condition.label()
+                                    )
                                     Text("${it.temperature} °C ")
                                 }
                             }
@@ -195,8 +222,12 @@ fun WeatherContent(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text("${it.time.dayOfWeek}")
-                                    Text("${it.condition}")
+                                    Text("${it.time.dayOfWeek.getDisplayName(TextStyle.FULL_STANDALONE,
+                                        Locale.getDefault())}")
+                                    Icon(
+                                        painter = painterResource(uiState.forecast.current.condition.iconRes()),
+                                        contentDescription = uiState.forecast.current.condition.label()
+                                    )
                                     Text("${it.maxTemperature} °C ")
                                     Text("${it.minTemperature} °C ")
                                 }
