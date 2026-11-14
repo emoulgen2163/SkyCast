@@ -1,4 +1,4 @@
-package com.emoulgen.skycast
+package com.emoulgen.skycast.fakeClasses
 
 import com.emoulgen.skycast.domain.model.City
 import com.emoulgen.skycast.domain.repository.CityRepository
@@ -8,7 +8,7 @@ import java.io.IOException
 
 class FakeCityRepository: CityRepository {
     var citiesToReturn: List<City> = emptyList()
-    var shouldThrow: Boolean = false
+    var shouldThrow = false
 
     override suspend fun searchCities(name: String): List<City> {
         if (shouldThrow) throw IOException()

@@ -1,6 +1,7 @@
 package com.emoulgen.skycast
 
 import com.emoulgen.skycast.domain.model.City
+import com.emoulgen.skycast.fakeClasses.FakeCityRepository
 import com.emoulgen.skycast.presentation.viewmodel.SearchResult
 import com.emoulgen.skycast.presentation.viewmodel.SearchViewModel
 import org.junit.Assert.assertEquals
