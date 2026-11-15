@@ -211,6 +211,8 @@ fun WeatherContent(
                             fontSize = 32.sp
                         )
 
+                        Spacer(Modifier.height(8.dp))
+
                         Icon(
                             modifier = Modifier.size(64.dp),
                             painter = painterResource(uiState.forecast.current.condition.iconRes()),
@@ -242,8 +244,8 @@ fun WeatherContent(
 
                                     Text("${it.time.hour}:00 ")
                                     Icon(
-                                        painter = painterResource(uiState.forecast.current.condition.iconRes()),
-                                        contentDescription = uiState.forecast.current.condition.label(),
+                                        painter = painterResource(it.condition.iconRes()),
+                                        contentDescription = it.condition.label(),
                                         tint = Color.Unspecified
                                     )
                                     Text("${it.temperature.roundToInt()}°")
@@ -267,8 +269,8 @@ fun WeatherContent(
                                         text = "${it.time.dayOfWeek.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())}"
                                     )
                                     Icon(
-                                        painter = painterResource(uiState.forecast.current.condition.iconRes()),
-                                        contentDescription = uiState.forecast.current.condition.label(),
+                                        painter = painterResource(it.condition.iconRes()),
+                                        contentDescription = it.condition.label(),
                                         tint = Color.Unspecified
                                     )
 

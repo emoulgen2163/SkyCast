@@ -1,9 +1,7 @@
 package com.emoulgen.skycast.presentation.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -59,7 +57,8 @@ fun AppNavigation() {
                 },
                 onBackClick = {
                     navController.popBackStack()
-                }
+                },
+                showBackButton = navController.previousBackStackEntry != null
             )
         }
 

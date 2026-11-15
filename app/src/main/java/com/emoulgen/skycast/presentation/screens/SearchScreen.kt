@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -40,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.emoulgen.skycast.domain.model.City
+import com.emoulgen.skycast.presentation.viewmodel.MainViewModel
 import com.emoulgen.skycast.presentation.viewmodel.SearchResult
 import com.emoulgen.skycast.presentation.viewmodel.SearchViewModel
 
@@ -47,6 +50,7 @@ import com.emoulgen.skycast.presentation.viewmodel.SearchViewModel
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
     onCityClick: (City) -> Unit,
+    showBackButton: Boolean,
     onBackClick: () -> Unit
 ) {
 
@@ -58,6 +62,7 @@ fun SearchScreen(
         onQueryText = { viewModel.onQueryChange(it) },
         onSearch = { viewModel.onSearch() },
         favorites = favorites,
+        showBackButton = showBackButton,
         result = uiState.results,
         onBackClick = onBackClick,
         onCityClick = { onCityClick(it) }
@@ -73,6 +78,7 @@ fun CityContent(
     onSearch: () -> Unit,
     favorites: List<City> = emptyList(),
     onBackClick: () -> Unit,
+    showBackButton: Boolean,
     onCityClick: (City) -> Unit,
     result: SearchResult,
 ) {
@@ -90,13 +96,15 @@ fun CityContent(
             TopAppBar(
                 title = { Text("Search City") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onBackClick
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                    if (showBackButton) {
+                        IconButton(
+                            onClick = onBackClick
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
                     }
                 }
             )
@@ -157,7 +165,17 @@ fun CityContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        ErrorMessage("Something Went Wrong: ${result.errorMessage}")
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = "Error",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+
+                            Spacer(Modifier.width(8.dp))
+
+                            ErrorMessage("Something Went Wrong: ${result.errorMessage}")
+                        }
 
                         Button(
                             modifier = Modifier.padding(top = 10.dp),
@@ -272,7 +290,8 @@ fun CityContentPreviewIdle() {
         favorites = cities,
         onBackClick = {},
         result = SearchResult.Idle,
-        onCityClick = { }
+        onCityClick = { },
+        showBackButton = true
     )
 }
 
@@ -285,7 +304,8 @@ fun CityContentPreviewEmpty() {
         onSearch = {},
         onBackClick = {},
         result = SearchResult.Empty,
-        onCityClick = { }
+        onCityClick = { },
+        showBackButton = true
     )
 }
 
@@ -298,7 +318,8 @@ fun CityContentPreviewError() {
         onSearch = {},
         onBackClick = {},
         result = SearchResult.Error(""),
-        onCityClick = { }
+        onCityClick = { },
+        showBackButton = true
     )
 }
 
@@ -311,7 +332,8 @@ fun CityContentLoading() {
         onSearch = {},
         onBackClick = {},
         result = SearchResult.Loading,
-        onCityClick = { }
+        onCityClick = { },
+        showBackButton = true
     )
 }
 
@@ -350,6 +372,7 @@ fun CityContentSuccess() {
         onSearch = {},
         onBackClick = {},
         result = SearchResult.Success(cities),
-        onCityClick = {}
+        onCityClick = {},
+        showBackButton = true
     )
 }
