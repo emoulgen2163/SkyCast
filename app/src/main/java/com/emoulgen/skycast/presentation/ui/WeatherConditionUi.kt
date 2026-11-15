@@ -1,5 +1,6 @@
 package com.emoulgen.skycast.presentation.ui
 
+import androidx.compose.ui.graphics.Color
 import com.emoulgen.skycast.R
 import com.emoulgen.skycast.domain.model.WeatherCondition
 
@@ -26,6 +27,19 @@ fun WeatherCondition.label(): String{
         WeatherCondition.Snowy -> "Snowy"
         WeatherCondition.Stormy -> "Stormy"
         WeatherCondition.Unknown -> "Unknown"
+    }
+}
+
+fun WeatherCondition.gradientColors(): List<Color>{
+    return when(this){
+        WeatherCondition.Clear -> listOf(Color(0xFF4FACFE), Color(0xFF00C6FB))
+        WeatherCondition.Rainy -> listOf(Color(0xFF4B6CB7), Color(0xFF182848))
+        WeatherCondition.Stormy -> listOf(Color(0xFF232526), Color(0xFF414345))
+        WeatherCondition.Cloudy -> listOf(Color(0xFFBBCDD2), Color(0xFF414345))
+        WeatherCondition.Foggy -> listOf(Color(0xFFBBCDD2), Color(0xFF414345))
+        WeatherCondition.Drizzling -> listOf(Color(0xFF4B6CB7), Color(0xFF4FACFE))
+        WeatherCondition.Snowy -> listOf(Color(0xFFBBCDD2), Color(0xFF414345))
+        WeatherCondition.Unknown -> emptyList()
     }
 }
 
